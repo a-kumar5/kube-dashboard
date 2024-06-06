@@ -11,6 +11,6 @@ RUN pip install -r requirements.txt
 # Bundle app source
 COPY src/index.py /app/
 
-EXPOSE 8080
+EXPOSE 8000
 
-CMD [ "python", "index.py" ]
+CMD [ "uvicorn", "index:app" ]

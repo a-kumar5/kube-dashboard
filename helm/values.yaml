@@ -1,14 +1,14 @@
 replicaCount: 1
 
-namespace: cam-dev
-serviceName: hscam-test-app
-selectorLabels: hscam-test-app
+namespace: dev
+serviceName: kube-timed-scheduler
+selectorLabels: kube-timed-scheduler
 
 image:
-  repository: 257676781382.dkr.ecr.us-east-2.amazonaws.com/hsarch-kube-scheduler
+  repository: connectayushkumar/kube-timed-scheduler
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 2
+  tag: latest
 
 service:
   port: 80

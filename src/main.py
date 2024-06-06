@@ -23,10 +23,6 @@ async def get_kubeconfig():
 
 @app.get("/api/v1/listpods")
 async def list_pod(kube_config: dict):
-    if kube_config:
-        print("cache hit")
-        config.load_kube_config_from_dict(config_dict=kube_config)
-    else:
     config.load_kube_config_from_dict(config_dict=kube_config)
     v1_api = client.CoreV1Api()  # api_client
     pods = v1_api.list_namespaced_pod("psc-dev")

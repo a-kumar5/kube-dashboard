@@ -1,0 +1,15 @@
+replicaCount: 1
+
+namespace: cam-dev
+serviceName: hscam-test-app
+selectorLabels: hscam-test-app
+
+image:
+  repository: 257676781382.dkr.ecr.us-east-2.amazonaws.com/hsarch-kube-scheduler
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 2
+
+service:
+  port: 80
+  targetport: 8080

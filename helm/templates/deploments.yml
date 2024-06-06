@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.serviceName }}-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.selectorLabels }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.selectorLabels }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.selectorLabels }}
+    spec:
+      containers:
+        - name: {{ .Values.serviceName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: TZ
+            value: America/New_York
+          ports:
+            - name: service-port
+              containerPort: {{ .Values.service.targetport }}

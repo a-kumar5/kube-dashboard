@@ -3,7 +3,7 @@ import redis
 from fastapi import FastAPI
 from requests_cache import CachedSession
 
-from src.core import kubeauth
+from src.core import auth
 from kubernetes import config, client
 
 app = FastAPI()

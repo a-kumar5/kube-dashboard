@@ -1,20 +1,19 @@
-from kubernetes import client, config
 from fastapi import FastAPI
+import logging
+
+from src.routers import pods
 
 app = FastAPI()
+
+logging.basicConfig(
+    filename="api_log.log",
+    filemode="a",
+    level=logging.DEBUG
+)
+logger = logging.getLogger(__name__)
+
+app.include_router(router=pods.router)
 
 @app.get("/")
 async def main():
     return "Welcome to Kubernetes dashboard"
-
-@app.get("/api/v1/listpods")
-def main():
-    config.load_incluster_config()
-
-    v1 = client.CoreV1Api()
-    print("Listing pods with their IPs:")
-    ret = v1.list_pod_for_all_namespaces(watch=False)
-    pod_dict = {}
-    for i in ret.items:
-        pod_dict[i.status.pod_ip] = i.metadata.name
-    return pod_dict

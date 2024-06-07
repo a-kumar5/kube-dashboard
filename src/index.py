@@ -1,9 +1,11 @@
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 import logging
 
 from src.routers import pods
 
 app = FastAPI()
+
 
 logging.basicConfig(
     filename="api_log.log",
@@ -14,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 app.include_router(router=pods.router)
 
-@app.get("/")
+
+@app.get("/", response_class=HTMLResponse)
 async def main():
-    return "Welcome to Kubernetes dashboard"
+    return "Welcome to kubernetes dashboard"

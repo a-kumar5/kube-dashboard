@@ -31,4 +31,4 @@ roleRef:
 
 # when pod is running in minikube and you want expose the application use port-forwarding
 
-` kubectl port-forward kube-timed-scheduler-deployment-6bf7974f5c-7wst5 8000:8000`
+` kubectl port-forward kube-dashboard-deployment-b8896f4d-b8tlx 8000:8000`

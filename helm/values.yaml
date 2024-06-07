@@ -1,14 +1,14 @@
 replicaCount: 1
 
 namespace: dev
-serviceName: kube-timed-scheduler
-selectorLabels: kube-timed-scheduler
+serviceName: kube-dashboard
+selectorLabels: kube-dashboard
 
 image:
-  repository: connectayushkumar/kube-timed-scheduler
+  repository: connectayushkumar/kube-dashboard
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: 1
 
 service:
   port: 80

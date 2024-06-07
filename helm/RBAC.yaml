@@ -14,7 +14,7 @@ metadata:
   name: pods-list
 subjects:
 - kind: ServiceAccount
-  name: kube-timed-scheduler
+  name: kube-dashboard
   namespace: dev
 roleRef:
   kind: ClusterRole

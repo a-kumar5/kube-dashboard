@@ -25,5 +25,5 @@ spec:
           ports:
             - name: service-port
               containerPort: {{ .Values.service.targetport }}
-      serviceAccountName: kube-timed-scheduler
-      serviceAccount: kube-timed-scheduler
+      serviceAccountName: kube-dashboard
+      serviceAccount: kube-dashboard

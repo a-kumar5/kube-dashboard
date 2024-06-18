@@ -31,3 +31,11 @@ async def list_pods_in_namespace(request: Request, namespace: str) -> dict:
     for i in ret.items:
         pod_dict[i.status.pod_ip] = i.metadata.name
     return templates.TemplateResponse(request=request, name="podlist.html", context={'context': pod_dict})
+
+@router.get("/{namespace}/pods/{name}/log")
+async def get_pods_logs(request: Request, name: str, namespace: str):
+    kubeconfig.get_config()
+    v1 = client.CoreV1Api()
+    ret = v1.read_namespaced_pod_log(name, namespace)
+    logs_array = ret.split('\n')
+    return templates.TemplateResponse(request=request, name="podlog.html", context={'logs': logs_array})

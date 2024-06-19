@@ -4,7 +4,7 @@ import logging
 
 from fastapi.staticfiles import StaticFiles
 
-from src.routers import pods
+from src.routers import pods, deployments
 from src.routers.pods import templates
 
 app = FastAPI()
@@ -17,6 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app.include_router(router=pods.router)
+app.include_router(router=deployments.router)
 app.mount("/static", StaticFiles(directory="src/static"), name='static')
 
 @app.get("/", response_class=HTMLResponse)

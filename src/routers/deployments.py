@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from datetime import datetime
+
+from fastapi import APIRouter, Request, status
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from kubernetes import client
 
@@ -12,8 +14,8 @@ router = APIRouter(
     tags=['deployment']
 )
 
-@router.get("/listdeploy", response_class=HTMLResponse)
-async def list_all_pods(request: Request) -> list:
+@router.get("/listdeploy", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+async def list_all_deployments(request: Request) -> list:
     kubeconfig.get_config()
     apps_v1 = client.AppsV1Api()
     resp = apps_v1.list_deployment_for_all_namespaces(watch=False)
@@ -26,8 +28,8 @@ async def list_all_pods(request: Request) -> list:
         deployment_list.append(deploy_data)
     return templates.TemplateResponse(request=request, name="deploylist.html", context={'context': deployment_list})
 
-@router.get("/{namespace}/listdeploy", response_class=HTMLResponse)
-async def list_all_pods(request: Request, namespace: str) -> list:
+@router.get("/namespace/{namespace}/listdeploy", response_class=HTMLResponse)
+async def list_all_namespace_deployments(request: Request, namespace: str) -> list:
     kubeconfig.get_config()
     apps_v1 = client.AppsV1Api()
     resp = apps_v1.list_namespaced_deployment(namespace=namespace)
@@ -39,3 +41,29 @@ async def list_all_pods(request: Request, namespace: str) -> list:
         deploy_data["replicas"] = i.spec.replicas
         deployment_list.append(deploy_data)
     return templates.TemplateResponse(request=request, name="deploylist.html", context={'context': deployment_list})
+
+@router.post("/namespace/{namespace}/deployments/{name}/replica/{count}", status_code=status.HTTP_200_OK)
+async def update_replicas(namespace: str, name: str, count: int):
+    kubeconfig.get_config()
+    apps_v1 = client.AppsV1Api()
+    body = {"spec":{"replicas": count}}
+    resp = apps_v1.patch_namespaced_deployment(name=name, namespace=namespace, body=body)
+    return JSONResponse(content={"message": "Update the replicas"})
+
+@router.get("/namespace/{namespace}/deployments/{name}/restart", status_code=status.HTTP_200_OK)
+async def restart_deployment(namespace: str, name: str):
+    kubeconfig.get_config()
+    apps_v1 = client.AppsV1Api()
+    body = {
+            "spec": {
+                "template": {
+                    "metadata": {
+                         "annotations": {
+                            "kubedashboard.kubernetes.io/restartedAt": datetime.now()
+                            }
+                        }
+                    }
+                }
+            }
+    resp = apps_v1.patch_namespaced_deployment(name=name, namespace=namespace, body=body)
+    return JSONResponse(content={"message": "Rollout restart started"})
